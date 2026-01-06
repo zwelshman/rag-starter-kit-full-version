@@ -1,0 +1,71 @@
+# Extraction Prompt Templates
+# 5 templates for information extraction
+
+## Template 1: Entity Extraction
+Extract all named entities from the following text and categorize them.
+
+Text:
+{context}
+
+Extracted Entities:
+- People:
+- Organizations:
+- Locations:
+- Dates/Times:
+- Monetary Values:
+- Products/Services:
+- Other:
+
+---
+
+## Template 2: Key-Value Extraction
+Extract key information as key-value pairs from the following content.
+
+Content:
+{context}
+
+Extracted Data:
+```json
+{
+  "key1": "value1",
+  "key2": "value2"
+}
+```
+
+---
+
+## Template 3: Fact Extraction
+Extract all factual claims from the content. Mark each with a confidence level.
+
+Content:
+{context}
+
+Extracted Facts:
+| Fact | Confidence | Source Reference |
+|------|------------|------------------|
+| | High/Medium/Low | |
+
+---
+
+## Template 4: Relationship Extraction
+Identify and extract relationships between entities in the content.
+
+Content:
+{context}
+
+Extracted Relationships:
+| Entity 1 | Relationship | Entity 2 |
+|----------|--------------|----------|
+| | | |
+
+---
+
+## Template 5: Structured Data Extraction
+Extract structured data from the unstructured content and format as a table or JSON.
+
+Content:
+{context}
+
+Format requested: {format}
+
+Extracted Data:

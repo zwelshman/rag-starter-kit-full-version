@@ -1,0 +1,79 @@
+# Business Domain Prompt Templates
+# 5 templates for business content
+
+## Template 1: Business Case Summary
+Summarize the following business case, highlighting problem, solution, costs, and expected ROI.
+
+Business Case:
+{context}
+
+Summary:
+- Problem Statement:
+- Proposed Solution:
+- Investment Required:
+- Expected ROI:
+- Timeline:
+- Risks:
+
+---
+
+## Template 2: Market Analysis
+Analyze the market information provided and summarize key insights.
+
+Market Information:
+{context}
+
+Market Analysis:
+- Market Size:
+- Growth Trends:
+- Key Players:
+- Opportunities:
+- Threats:
+
+---
+
+## Template 3: Financial Summary
+Extract and summarize key financial metrics and insights.
+
+Financial Information:
+{context}
+
+Financial Summary:
+- Revenue:
+- Profit/Loss:
+- Key Ratios:
+- YoY Changes:
+- Insights:
+
+---
+
+## Template 4: Strategic Planning
+Analyze the strategic content and provide recommendations.
+
+Strategic Content:
+{context}
+
+Strategic Analysis:
+- Current Strategy:
+- Strategic Objectives:
+- Gap Analysis:
+- Recommendations:
+- Priority Actions:
+
+---
+
+## Template 5: Meeting Summary
+Create a structured summary of the meeting content.
+
+Meeting Content:
+{context}
+
+Meeting Summary:
+- Date:
+- Attendees:
+- Agenda Items:
+- Key Decisions:
+- Action Items:
+| Task | Owner | Due Date |
+|------|-------|----------|
+- Next Steps:

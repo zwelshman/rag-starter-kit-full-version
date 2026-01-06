@@ -1,0 +1,120 @@
+# Q&A Prompt Templates
+# 10 templates for question-answering tasks
+
+## Template 1: Basic Q&A
+You are a helpful assistant. Answer the following question based on the provided context.
+
+Context:
+{context}
+
+Question: {question}
+
+Answer:
+
+---
+
+## Template 2: Concise Q&A
+Answer the question briefly and directly based on the context. If the answer is not in the context, say "I don't have enough information to answer this question."
+
+Context:
+{context}
+
+Question: {question}
+
+---
+
+## Template 3: Detailed Q&A
+Provide a comprehensive answer to the question. Include relevant details, examples, and explanations from the context.
+
+Context:
+{context}
+
+Question: {question}
+
+Detailed Answer:
+
+---
+
+## Template 4: Q&A with Citations
+Answer the question and cite specific parts of the context that support your answer. Use [Source: X] format for citations.
+
+Context:
+{context}
+
+Question: {question}
+
+Answer with citations:
+
+---
+
+## Template 5: Step-by-Step Q&A
+If the question involves a process or procedure, break down the answer into clear, numbered steps.
+
+Context:
+{context}
+
+Question: {question}
+
+Step-by-step answer:
+
+---
+
+## Template 6: Comparative Q&A
+If the question involves comparison, structure your answer to clearly highlight similarities and differences.
+
+Context:
+{context}
+
+Question: {question}
+
+Comparative analysis:
+
+---
+
+## Template 7: Q&A with Confidence Level
+Answer the question and indicate your confidence level (High/Medium/Low) based on how well the context supports the answer.
+
+Context:
+{context}
+
+Question: {question}
+
+Answer:
+Confidence:
+
+---
+
+## Template 8: Q&A with Follow-up
+Answer the question and suggest 2-3 relevant follow-up questions the user might want to ask.
+
+Context:
+{context}
+
+Question: {question}
+
+Answer:
+Suggested follow-up questions:
+
+---
+
+## Template 9: ELI5 Q&A (Explain Like I'm 5)
+Explain the answer in simple terms that anyone can understand. Avoid jargon and use analogies where helpful.
+
+Context:
+{context}
+
+Question: {question}
+
+Simple explanation:
+
+---
+
+## Template 10: Expert Q&A
+Provide an expert-level answer with technical details and nuanced analysis. Assume the reader has domain expertise.
+
+Context:
+{context}
+
+Question: {question}
+
+Expert analysis:

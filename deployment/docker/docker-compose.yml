@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  rag-app:
+    build:
+      context: ../..
+      dockerfile: deployment/docker/Dockerfile
+    ports:
+      - "8501:8501"
+    environment:
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - COHERE_API_KEY=${COHERE_API_KEY:-}
+      - PINECONE_API_KEY=${PINECONE_API_KEY:-}
+      - WEAVIATE_URL=${WEAVIATE_URL:-}
+      - OLLAMA_HOST=http://ollama:11434
+    volumes:
+      - app-data:/app/data
+      - chroma-data:/app/chroma_db
+    depends_on:
+      - chromadb
+    restart: unless-stopped
+    networks:
+      - rag-network
+
+  chromadb:
+    image: chromadb/chroma:latest
+    ports:
+      - "8000:8000"
+    volumes:
+      - chroma-server-data:/chroma/chroma
+    environment:
+      - ANONYMIZED_TELEMETRY=false
+    restart: unless-stopped
+    networks:
+      - rag-network
+
+  # Optional: Local Ollama for free LLM inference
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-data:/root/.ollama
+    restart: unless-stopped
+    networks:
+      - rag-network
+    # Uncomment for GPU support
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
+
+volumes:
+  app-data:
+  chroma-data:
+  chroma-server-data:
+  ollama-data:
+
+networks:
+  rag-network:
+    driver: bridge

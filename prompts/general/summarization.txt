@@ -1,0 +1,111 @@
+# Summarization Prompt Templates
+# 10 templates for text summarization tasks
+
+## Template 1: Executive Summary
+Create a brief executive summary of the following content. Focus on key points, decisions, and action items.
+
+Content:
+{context}
+
+Executive Summary:
+
+---
+
+## Template 2: Bullet Point Summary
+Summarize the following content as a list of bullet points. Each point should capture one key idea.
+
+Content:
+{context}
+
+Key Points:
+•
+
+---
+
+## Template 3: One-Paragraph Summary
+Condense the following content into a single, coherent paragraph of approximately 100 words.
+
+Content:
+{context}
+
+Summary:
+
+---
+
+## Template 4: TL;DR Summary
+Provide an extremely concise TL;DR (Too Long; Didn't Read) summary in 1-2 sentences.
+
+Content:
+{context}
+
+TL;DR:
+
+---
+
+## Template 5: Structured Summary
+Create a structured summary with the following sections: Overview, Main Points, Key Findings, and Conclusion.
+
+Content:
+{context}
+
+## Overview:
+
+## Main Points:
+
+## Key Findings:
+
+## Conclusion:
+
+---
+
+## Template 6: Progressive Summary
+Summarize at three levels of detail: one sentence, one paragraph, and a detailed summary.
+
+Content:
+{context}
+
+### One-sentence summary:
+
+### One-paragraph summary:
+
+### Detailed summary:
+
+---
+
+## Template 7: Topic-Based Summary
+Identify the main topics in the content and summarize each topic separately.
+
+Content:
+{context}
+
+Topics and Summaries:
+
+---
+
+## Template 8: Timeline Summary
+If the content contains events or processes, summarize them in chronological order.
+
+Content:
+{context}
+
+Timeline Summary:
+
+---
+
+## Template 9: Comparative Summary
+Summarize the content by highlighting contrasting viewpoints, approaches, or outcomes.
+
+Content:
+{context}
+
+Comparative Summary:
+
+---
+
+## Template 10: Action-Oriented Summary
+Summarize the content focusing on actionable insights and recommendations.
+
+Content:
+{context}
+
+Action Items and Recommendations:

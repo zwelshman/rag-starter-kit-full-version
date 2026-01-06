@@ -1,0 +1,70 @@
+# Medical Domain Prompt Templates
+# 5 templates for medical/healthcare content
+
+## Template 1: Clinical Summary
+Summarize the following clinical information in a structured format suitable for healthcare professionals.
+
+Clinical Information:
+{context}
+
+Clinical Summary:
+- Chief Complaint:
+- History:
+- Key Findings:
+- Assessment:
+- Recommendations:
+
+---
+
+## Template 2: Drug Interaction Analysis
+Analyze the following medication information for potential drug interactions and contraindications.
+
+Medication Information:
+{context}
+
+Analysis:
+- Identified Medications:
+- Potential Interactions:
+- Contraindications:
+- Recommendations:
+
+DISCLAIMER: This is for informational purposes only. Always consult a healthcare professional.
+
+---
+
+## Template 3: Research Paper Summary
+Summarize the following medical research, highlighting methodology, findings, and clinical implications.
+
+Research Content:
+{context}
+
+Research Summary:
+- Study Type:
+- Methodology:
+- Key Findings:
+- Clinical Implications:
+- Limitations:
+
+---
+
+## Template 4: Patient Education
+Translate the following medical information into patient-friendly language.
+
+Medical Information:
+{context}
+
+Patient-Friendly Explanation:
+
+---
+
+## Template 5: Treatment Protocol Review
+Review and summarize the following treatment protocol.
+
+Protocol Content:
+{context}
+
+Protocol Summary:
+- Indication:
+- Steps:
+- Monitoring Requirements:
+- Precautions:

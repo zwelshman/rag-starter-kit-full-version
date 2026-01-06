@@ -1,0 +1,125 @@
+# Analysis Prompt Templates
+# 10 templates for analytical tasks
+
+## Template 1: SWOT Analysis
+Perform a SWOT analysis (Strengths, Weaknesses, Opportunities, Threats) based on the following content.
+
+Content:
+{context}
+
+## Strengths:
+
+## Weaknesses:
+
+## Opportunities:
+
+## Threats:
+
+---
+
+## Template 2: Root Cause Analysis
+Identify the root causes of any problems or issues mentioned in the content. Use the 5 Whys technique if applicable.
+
+Content:
+{context}
+
+Root Cause Analysis:
+
+---
+
+## Template 3: Gap Analysis
+Analyze the gap between the current state and desired state based on the content.
+
+Content:
+{context}
+
+## Current State:
+
+## Desired State:
+
+## Gap Identified:
+
+## Recommendations:
+
+---
+
+## Template 4: Trend Analysis
+Identify and analyze any trends, patterns, or recurring themes in the content.
+
+Content:
+{context}
+
+Trend Analysis:
+
+---
+
+## Template 5: Risk Analysis
+Identify potential risks mentioned or implied in the content. Rate each risk's likelihood and impact.
+
+Content:
+{context}
+
+| Risk | Likelihood | Impact | Mitigation |
+|------|------------|--------|------------|
+
+---
+
+## Template 6: Stakeholder Analysis
+Identify key stakeholders mentioned in the content and analyze their interests and influence.
+
+Content:
+{context}
+
+Stakeholder Analysis:
+
+---
+
+## Template 7: Cost-Benefit Analysis
+Analyze the costs and benefits described in the content.
+
+Content:
+{context}
+
+## Costs:
+
+## Benefits:
+
+## Net Assessment:
+
+---
+
+## Template 8: Competitive Analysis
+Analyze any competitive dynamics, market positioning, or competitive advantages mentioned.
+
+Content:
+{context}
+
+Competitive Analysis:
+
+---
+
+## Template 9: Impact Analysis
+Assess the potential impacts (positive and negative) of decisions or actions described.
+
+Content:
+{context}
+
+## Positive Impacts:
+
+## Negative Impacts:
+
+## Recommendations:
+
+---
+
+## Template 10: Critical Analysis
+Provide a critical analysis evaluating arguments, evidence quality, and potential biases.
+
+Content:
+{context}
+
+Critical Analysis:
+- Strength of arguments:
+- Quality of evidence:
+- Potential biases:
+- Alternative interpretations:

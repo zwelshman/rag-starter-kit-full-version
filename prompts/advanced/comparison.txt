@@ -1,0 +1,98 @@
+# Comparison Prompt Templates
+# 5 templates for comparative analysis
+
+## Template 1: Side-by-Side Comparison
+Create a detailed side-by-side comparison of the items mentioned in the context.
+
+Context:
+{context}
+
+Question: {question}
+
+| Aspect | Item A | Item B |
+|--------|--------|--------|
+| Feature 1 | | |
+| Feature 2 | | |
+| Feature 3 | | |
+| Pros | | |
+| Cons | | |
+| Recommendation | |
+
+---
+
+## Template 2: Weighted Comparison
+Compare options using weighted criteria. First identify important criteria, then score each option.
+
+Context:
+{context}
+
+Question: {question}
+
+Criteria and Weights:
+| Criterion | Weight |
+|-----------|--------|
+
+Scoring:
+| Criterion | Option A | Option B |
+|-----------|----------|----------|
+
+Weighted Total:
+Recommendation:
+
+---
+
+## Template 3: Before/After Comparison
+Compare the before and after states described in the context.
+
+Context:
+{context}
+
+Question: {question}
+
+## Before State:
+- Characteristics:
+- Challenges:
+- Metrics:
+
+## After State:
+- Characteristics:
+- Improvements:
+- Metrics:
+
+## Change Analysis:
+
+---
+
+## Template 4: Qualitative Comparison
+Provide a qualitative comparison focusing on non-quantifiable aspects.
+
+Context:
+{context}
+
+Question: {question}
+
+Qualitative Comparison:
+- User Experience:
+- Quality:
+- Reliability:
+- Support:
+- Overall Assessment:
+
+---
+
+## Template 5: Decision Matrix
+Create a decision matrix to help choose between options.
+
+Context:
+{context}
+
+Question: {question}
+
+Decision Matrix:
+| Criteria | Weight | Option 1 | Option 2 | Option 3 |
+|----------|--------|----------|----------|----------|
+| | | | | |
+| TOTAL | | | | |
+
+Decision Recommendation:
+Justification:

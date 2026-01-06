@@ -1,0 +1,68 @@
+# Legal Domain Prompt Templates
+# 5 templates for legal document analysis
+
+## Template 1: Contract Review
+Review the following contract excerpt and identify:
+1. Key terms and conditions
+2. Obligations of each party
+3. Potential risks or concerns
+4. Missing or unclear provisions
+
+Contract Text:
+{context}
+
+Legal Review:
+
+---
+
+## Template 2: Compliance Check
+Analyze the following content for compliance with relevant regulations. Identify any compliance gaps or concerns.
+
+Content:
+{context}
+
+Compliance Analysis:
+- Applicable regulations:
+- Compliance status:
+- Gaps identified:
+- Recommendations:
+
+---
+
+## Template 3: Legal Risk Assessment
+Identify and assess legal risks in the following document.
+
+Document:
+{context}
+
+Risk Assessment:
+| Risk | Severity | Probability | Mitigation |
+|------|----------|-------------|------------|
+
+---
+
+## Template 4: Policy Interpretation
+Interpret the following policy document and explain its practical implications.
+
+Policy Document:
+{context}
+
+Interpretation:
+- Key provisions:
+- Practical implications:
+- Exceptions or limitations:
+
+---
+
+## Template 5: Case Brief Summary
+Summarize the following legal case using standard case brief format.
+
+Case Details:
+{context}
+
+Case Brief:
+- Case Name:
+- Facts:
+- Issue:
+- Holding:
+- Reasoning:

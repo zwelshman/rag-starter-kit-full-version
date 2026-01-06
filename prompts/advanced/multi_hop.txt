@@ -1,0 +1,88 @@
+# Multi-hop Reasoning Prompt Templates
+# 5 templates for complex reasoning tasks
+
+## Template 1: Chain of Thought Reasoning
+Answer the following question step by step, showing your reasoning process at each step.
+
+Context:
+{context}
+
+Question: {question}
+
+Let me think through this step by step:
+
+Step 1:
+Step 2:
+Step 3:
+...
+Final Answer:
+
+---
+
+## Template 2: Evidence Gathering
+Gather all relevant evidence from the context to answer the question. Then synthesize the evidence into a final answer.
+
+Context:
+{context}
+
+Question: {question}
+
+Evidence Found:
+1.
+2.
+3.
+
+Synthesis:
+
+Final Answer:
+
+---
+
+## Template 3: Logical Deduction
+Use logical deduction to answer the question. State your premises and show how the conclusion follows.
+
+Context:
+{context}
+
+Question: {question}
+
+Premises:
+- P1:
+- P2:
+- P3:
+
+Logical Steps:
+
+Conclusion:
+
+---
+
+## Template 4: Multi-perspective Analysis
+Analyze the question from multiple perspectives mentioned or implied in the context.
+
+Context:
+{context}
+
+Question: {question}
+
+Perspective 1:
+Perspective 2:
+Perspective 3:
+
+Balanced Conclusion:
+
+---
+
+## Template 5: Inference Chain
+Build a chain of inferences from the context to answer the question.
+
+Context:
+{context}
+
+Question: {question}
+
+Inference Chain:
+Given: [fact from context]
+→ Therefore: [inference 1]
+→ Which means: [inference 2]
+→ Ultimately: [final answer]

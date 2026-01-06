@@ -1,0 +1,76 @@
+# Technical Domain Prompt Templates
+# 5 templates for technical documentation
+
+## Template 1: Code Documentation
+Document the following code explaining its purpose, inputs, outputs, and usage.
+
+Code:
+{context}
+
+Documentation:
+- Purpose:
+- Inputs:
+- Outputs:
+- Usage Example:
+- Dependencies:
+
+---
+
+## Template 2: Architecture Review
+Analyze the following system architecture and provide insights on design patterns, scalability, and potential improvements.
+
+Architecture Description:
+{context}
+
+Architecture Review:
+- Design Patterns Used:
+- Scalability Assessment:
+- Security Considerations:
+- Improvement Recommendations:
+
+---
+
+## Template 3: Bug Analysis
+Analyze the following bug report and provide a root cause analysis with recommended fixes.
+
+Bug Report:
+{context}
+
+Analysis:
+- Root Cause:
+- Impact:
+- Recommended Fix:
+- Prevention Measures:
+
+---
+
+## Template 4: API Documentation
+Create API documentation from the following specification or code.
+
+API Information:
+{context}
+
+API Documentation:
+## Endpoint:
+## Method:
+## Parameters:
+## Request Body:
+## Response:
+## Example:
+
+---
+
+## Template 5: Technical Comparison
+Compare the technologies or approaches described in the following content.
+
+Content:
+{context}
+
+Technical Comparison:
+| Aspect | Option A | Option B |
+|--------|----------|----------|
+| Performance | | |
+| Scalability | | |
+| Ease of Use | | |
+| Cost | | |
+| Recommendation | |
