@@ -10,10 +10,10 @@ A production-ready, modular Retrieval-Augmented Generation (RAG) application wit
 
 ### Full Version Capabilities
 - 🚀 **Unlimited Documents & Queries** - No restrictions on usage
-- 🧠 **4 LLM Providers** - Anthropic (Claude), OpenAI (GPT), Cohere, Ollama (local)
+- 🧠 **5 LLM Providers** - Anthropic (Claude), OpenAI (GPT), Cohere, Hugging Face, Ollama (local)
 - 🗄️ **3 Vector Databases** - ChromaDB (default), Pinecone, Weaviate
 - 📝 **50+ Prompt Templates** - General, domain-specific, and advanced templates
-- 🔐 **Authentication & User Management** - Role-based access control
+- 🔐 **Google OAuth Authentication** - Simple sign-in with Google accounts
 - 💰 **Cost Tracking (Experimental)** - Monitor token usage and costs
 - 📊 **Analytics Dashboard** - Track queries, documents, and performance
 - 🚀 **Production Deployment** - Docker, Railway, HuggingFace Spaces, Streamlit Cloud
@@ -50,6 +50,7 @@ rag-starter-kit-pro/
 │   │   ├── anthropic_provider.py     # Anthropic (Claude)
 │   │   ├── openai_provider.py        # OpenAI (GPT)
 │   │   ├── cohere_provider.py        # Cohere
+│   │   ├── huggingface_provider.py   # Hugging Face (Llama, Mistral, etc.)
 │   │   ├── ollama_provider.py        # Ollama (local)
 │   │   └── factory.py                # Provider factory
 │   ├── document_processor.py         # Document loading & chunking
@@ -96,16 +97,21 @@ ANTHROPIC_API_KEY = "sk-ant-your-api-key-here"
 # Optional: Additional providers
 OPENAI_API_KEY = "sk-your-openai-key"
 COHERE_API_KEY = "your-cohere-key"
+HF_API_KEY = "hf_your-huggingface-key"
 
 # Optional: Cloud vector stores
 PINECONE_API_KEY = "your-pinecone-key"
 WEAVIATE_API_KEY = "your-weaviate-key"
+
+# Optional: Authentication (Google OAuth)
+AUTH_ENABLED = false  # Set to true to enable Google sign-in
 ```
 
 Get your API keys:
 - [Anthropic Console](https://console.anthropic.com/)
 - [OpenAI Platform](https://platform.openai.com/)
 - [Cohere Dashboard](https://dashboard.cohere.com/)
+- [Hugging Face Settings](https://huggingface.co/settings/tokens)
 
 ### 3. Run the App
 
@@ -143,6 +149,7 @@ The app will open at `http://localhost:8501`.
 | Anthropic | claude-sonnet-4-5, claude-opus-4-5, claude-haiku-4-5 | claude-sonnet-4-5 |
 | OpenAI | gpt-4o, gpt-4o-mini, gpt-4-turbo, gpt-3.5-turbo | gpt-4o |
 | Cohere | command-r-plus, command-r, command | command-r-plus |
+| Hugging Face | Meta-Llama-3.1-8B, Mistral-7B, Mixtral-8x7B, Phi-3, Gemma-2 | Meta-Llama-3.1-8B-Instruct |
 | Ollama | llama3.2, llama3.1, mistral, mixtral, codellama | llama3.2 |
 
 ### Vector Database
@@ -311,4 +318,4 @@ MIT License
 
 ---
 
-Made with ❤️ using Claude, GPT, Cohere, and Ollama
+Made with ❤️ using Claude, GPT, Cohere, Hugging Face, and Ollama

@@ -1,7 +1,7 @@
 """
 LLM Client Factory
 Factory class for creating appropriate LLM clients.
-Supports: OpenAI, Anthropic, Cohere, Ollama
+Supports: OpenAI, Anthropic, Cohere, Ollama, Hugging Face
 """
 
 from typing import Optional, List, Generator
@@ -11,6 +11,7 @@ from .openai_provider import OpenAIClient
 from .anthropic_provider import AnthropicClient
 from .cohere_provider import CohereClient
 from .ollama_provider import OllamaClient
+from .huggingface_provider import HuggingFaceClient
 
 logger = logging.getLogger("rag_app.llm.factory")
 
@@ -25,6 +26,7 @@ class LLMClient:
     - Anthropic: Claude models
     - Cohere: Command R/R+ models
     - Ollama: Local LLM inference
+    - Hugging Face: Meta Llama, Mistral, and other open models
     """
 
     PROVIDERS = {
@@ -32,6 +34,7 @@ class LLMClient:
         "anthropic": AnthropicClient,
         "cohere": CohereClient,
         "ollama": OllamaClient,
+        "huggingface": HuggingFaceClient,
     }
 
     AVAILABLE_MODELS = {
@@ -64,6 +67,15 @@ class LLMClient:
             "phi3",
             "gemma2",
             "qwen2.5",
+        ],
+        "huggingface": [
+            "meta-llama/Meta-Llama-3.1-8B-Instruct",
+            "meta-llama/Meta-Llama-3-8B-Instruct",
+            "mistralai/Mistral-7B-Instruct-v0.3",
+            "mistralai/Mixtral-8x7B-Instruct-v0.1",
+            "microsoft/Phi-3-mini-4k-instruct",
+            "google/gemma-2-9b-it",
+            "Qwen/Qwen2.5-7B-Instruct",
         ],
     }
 
@@ -168,5 +180,11 @@ class LLMClient:
                 "description": "Local LLM inference",
                 "requires_api_key": False,
                 "models": cls.AVAILABLE_MODELS["ollama"],
+            },
+            "huggingface": {
+                "name": "Hugging Face",
+                "description": "Meta Llama, Mistral, and other open models via Inference API",
+                "requires_api_key": True,
+                "models": cls.AVAILABLE_MODELS["huggingface"],
             },
         }

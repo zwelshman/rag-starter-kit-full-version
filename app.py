@@ -4,10 +4,10 @@ A modular, production-ready RAG application with multiple LLM providers and vect
 
 Features:
 - ✅ Unlimited documents and queries
-- ✅ 4 LLM providers (OpenAI, Claude, Cohere, Ollama)
+- ✅ 5 LLM providers (OpenAI, Claude, Cohere, Hugging Face, Ollama)
 - ✅ 3 vector DBs (Pinecone, ChromaDB, Weaviate)
 - ✅ 50+ prompt templates
-- ✅ Authentication & user management
+- ✅ Google OAuth authentication
 - ✅ Cost tracking & analytics
 - ✅ Production deployment ready
 """
@@ -61,10 +61,10 @@ def render_welcome_section():
 |---------|--------|
 | Unlimited Documents | ✅ |
 | Unlimited Queries | ✅ |
-| Multiple LLM Providers | ✅ OpenAI, Claude, Cohere, Ollama |
+| Multiple LLM Providers | ✅ OpenAI, Claude, Cohere, Hugging Face, Ollama |
 | Multiple Vector Stores | ✅ ChromaDB, Pinecone, Weaviate |
 | 50+ Prompt Templates | ✅ |
-| Authentication & User Management | ✅ |
+| Google OAuth Authentication | ✅ |
 | Cost Tracking & Analytics | ✅ |
 | Production Deployment | ✅ |
 
@@ -399,7 +399,7 @@ def main():
     footer_col1, footer_col2 = st.columns([2, 1])
     with footer_col1:
         st.caption(
-            "RAG Starter Kit Pro • OpenAI, Claude, Cohere, Ollama • "
+            "RAG Starter Kit Pro • OpenAI, Claude, Cohere, Hugging Face, Ollama • "
             "ChromaDB, Pinecone, Weaviate • Unlimited Usage"
         )
     with footer_col2:

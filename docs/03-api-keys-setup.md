@@ -11,6 +11,7 @@ RAG Starter Kit Pro supports multiple providers:
 | Anthropic | LLM | Yes |
 | OpenAI | LLM | Yes |
 | Cohere | LLM | Yes |
+| Hugging Face | LLM | Yes |
 | Ollama | LLM | No (local) |
 | Pinecone | Vector DB | Yes |
 | Weaviate | Vector DB | Optional |
@@ -87,6 +88,41 @@ COHERE_API_KEY = "your-cohere-api-key"
 | command-r-plus | RAG tasks | $$ |
 | command-r | General | $ |
 | command | Basic | $ |
+
+## Hugging Face
+
+### Getting an API Key
+
+1. Go to [huggingface.co](https://huggingface.co)
+2. Sign up or log in
+3. Navigate to [Settings > Access Tokens](https://huggingface.co/settings/tokens)
+4. Click "New token"
+5. Give it a name and select "Read" access (or "Write" if needed)
+6. Copy and save the token
+
+### Configuration
+
+```toml
+HF_API_KEY = "hf_your-huggingface-token-here"
+```
+
+### Available Models
+
+| Model | Best For | Notes |
+|-------|----------|-------|
+| meta-llama/Meta-Llama-3.1-8B-Instruct | General use (default) | Fast, capable |
+| meta-llama/Meta-Llama-3-8B-Instruct | General use | Previous generation |
+| mistralai/Mistral-7B-Instruct-v0.3 | Fast inference | Efficient |
+| mistralai/Mixtral-8x7B-Instruct-v0.1 | Complex tasks | MoE architecture |
+| microsoft/Phi-3-mini-4k-instruct | Quick responses | Small & fast |
+| google/gemma-2-9b-it | Balanced | Google's open model |
+| Qwen/Qwen2.5-7B-Instruct | Multilingual | Strong in multiple languages |
+
+### Notes
+
+- Hugging Face Inference API provides serverless access to open models
+- Some models may require accepting terms on the model page first
+- Free tier has rate limits; Pro subscription available for higher limits
 
 ## Ollama (Local)
 
