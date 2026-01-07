@@ -64,9 +64,9 @@ When deploying to Streamlit Cloud, Google OAuth is handled automatically:
 When a user visits your app:
 
 1. They see a Google sign-in page
-2. After authentication, `st.experimental_user` contains their info:
-   - `st.experimental_user.email` - User's email address
-   - `st.experimental_user.name` - User's display name (if available)
+2. After authentication, `st.user` contains their info:
+   - `st.user.email` - User's email address
+   - `st.user.name` - User's display name (if available)
 
 3. The app checks authentication status automatically
 
@@ -231,9 +231,9 @@ Local development doesn't have access to Streamlit Cloud's OAuth. Options:
 
 ### "User not being recognized"
 
-Ensure your app checks `st.experimental_user`:
+Ensure your app checks `st.user`:
 ```python
-if hasattr(st, 'experimental_user') and st.experimental_user.email:
+if hasattr(st, 'user') and st.user.email:
     # User is authenticated
     pass
 ```
