@@ -34,14 +34,15 @@ def check_authentication() -> bool:
         return True
 
     # Check if user is logged in via Streamlit's user API
-    if hasattr(st, 'user') and st.user.email:
+    user_email = getattr(st.user, 'email', None) if hasattr(st, 'user') else None
+    if user_email:
         st.session_state.authenticated = True
         st.session_state.current_user = {
-            "email": st.user.email,
-            "name": getattr(st.user, 'name', st.user.email.split('@')[0]),
+            "email": user_email,
+            "name": getattr(st.user, 'name', user_email.split('@')[0]),
             "role": "user",
         }
-        logger.info(f"User authenticated via Google OAuth: {st.user.email}")
+        logger.info(f"User authenticated via Google OAuth: {user_email}")
         return True
 
     # Fallback: check session state
@@ -53,10 +54,11 @@ def get_current_user() -> Optional[Dict[str, Any]]:
     init_auth_state()
 
     # Try to get user from Streamlit's user API first
-    if hasattr(st, 'user') and st.user.email:
+    user_email = getattr(st.user, 'email', None) if hasattr(st, 'user') else None
+    if user_email:
         return {
-            "email": st.user.email,
-            "name": getattr(st.user, 'name', st.user.email.split('@')[0]),
+            "email": user_email,
+            "name": getattr(st.user, 'name', user_email.split('@')[0]),
             "role": "user",
         }
 
