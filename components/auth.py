@@ -33,15 +33,15 @@ def check_authentication() -> bool:
     if not st.session_state.get('auth_enabled', False):
         return True
 
-    # Check if user is logged in via Streamlit's experimental_user
-    if hasattr(st, 'experimental_user') and st.experimental_user.email:
+    # Check if user is logged in via Streamlit's user API
+    if hasattr(st, 'user') and st.user.email:
         st.session_state.authenticated = True
         st.session_state.current_user = {
-            "email": st.experimental_user.email,
-            "name": getattr(st.experimental_user, 'name', st.experimental_user.email.split('@')[0]),
+            "email": st.user.email,
+            "name": getattr(st.user, 'name', st.user.email.split('@')[0]),
             "role": "user",
         }
-        logger.info(f"User authenticated via Google OAuth: {st.experimental_user.email}")
+        logger.info(f"User authenticated via Google OAuth: {st.user.email}")
         return True
 
     # Fallback: check session state
@@ -52,11 +52,11 @@ def get_current_user() -> Optional[Dict[str, Any]]:
     """Get the current authenticated user."""
     init_auth_state()
 
-    # Try to get user from Streamlit's experimental_user first
-    if hasattr(st, 'experimental_user') and st.experimental_user.email:
+    # Try to get user from Streamlit's user API first
+    if hasattr(st, 'user') and st.user.email:
         return {
-            "email": st.experimental_user.email,
-            "name": getattr(st.experimental_user, 'name', st.experimental_user.email.split('@')[0]),
+            "email": st.user.email,
+            "name": getattr(st.user, 'name', st.user.email.split('@')[0]),
             "role": "user",
         }
 
