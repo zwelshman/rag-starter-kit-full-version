@@ -1,247 +1,277 @@
 # Authentication Setup Guide
 
-Configure user authentication and access control for your RAG application.
+Configure Google OAuth authentication for your RAG application using Streamlit Cloud's built-in authentication.
 
 ## Overview
 
-RAG Starter Kit Pro includes a built-in authentication system with:
-- User registration and login
-- Role-based access control
-- Session management
-- Brute force protection
+RAG Starter Kit Pro uses Google OAuth for simple, secure authentication:
+- Sign in with Google account
+- No password management required
+- Automatic session handling
+- Easy to enable/disable
 
 ## Enabling Authentication
 
-### 1. Enable in Configuration
+### Option 1: Environment Variable
 
+Set in your `.env` file or environment:
+```bash
+AUTH_ENABLED=true
+```
+
+### Option 2: Streamlit Secrets
+
+Add to `.streamlit/secrets.toml`:
+```toml
+AUTH_ENABLED = true
+```
+
+### Option 3: Session State
+
+Set programmatically:
 ```python
-# In app.py
 st.session_state.auth_enabled = True
 ```
 
-Or via environment variable:
-```toml
-AUTH_ENABLED = "true"
-```
+## Streamlit Cloud Deployment (Recommended)
 
-### 2. Configure Secret Key
+When deploying to Streamlit Cloud, Google OAuth is handled automatically:
 
-```toml
-# .streamlit/secrets.toml
-SECRET_KEY = "your-secure-random-key-here"
-```
+### Setup Steps
 
-Generate a secure key:
+1. **Deploy your app** to [Streamlit Cloud](https://share.streamlit.io)
+
+2. **Go to App Settings**
+   - Click the menu (⋮) on your deployed app
+   - Select "Settings"
+
+3. **Enable Viewer Authentication**
+   - Go to "Sharing" section
+   - Enable "Viewer authentication"
+   - Select "Google" as the identity provider
+
+4. **Configure Allowed Users** (Optional)
+   - Add specific email addresses to allow
+   - Or allow all users from specific domains
+   - Example: `@yourcompany.com`
+
+5. **Save Settings**
+   - Authentication is now active
+   - Users must sign in with Google to access
+
+### How It Works
+
+When a user visits your app:
+
+1. They see a Google sign-in page
+2. After authentication, `st.experimental_user` contains their info:
+   - `st.experimental_user.email` - User's email address
+   - `st.experimental_user.name` - User's display name (if available)
+
+3. The app checks authentication status automatically
+
+## Local Development
+
+For local development, you have two options:
+
+### Option 1: Disable Authentication
+
 ```bash
-python -c "import secrets; print(secrets.token_hex(32))"
+# .env
+AUTH_ENABLED=false
 ```
 
-## Default Users
+This allows full access without sign-in during development.
 
-The system comes with default users for testing:
+### Option 2: Use Streamlit Auth Testing
 
-| Username | Password | Role |
-|----------|----------|------|
-| admin | admin123 | admin |
-| user | user123 | user |
+Run with authentication testing:
+```bash
+streamlit run app.py --server.auth=mock
+```
 
-**Important:** Change these in production!
+## User Information
 
-## User Management
-
-### Adding Users Programmatically
+### Getting Current User
 
 ```python
-from components.auth import register_user
+from components.auth import get_current_user
 
-register_user(
-    username="newuser",
-    password="securepassword",
-    name="New User",
-    email="user@example.com",
-    role="user"
-)
+user = get_current_user()
+if user:
+    print(f"Welcome, {user['name']}")
+    print(f"Email: {user['email']}")
 ```
 
-### User Roles
+### User Object Structure
 
-| Role | Permissions |
-|------|-------------|
-| admin | Full access, user management |
-| user | Standard access |
-| viewer | Read-only access |
+```python
+{
+    "email": "user@example.com",
+    "name": "User Name",
+    "role": "user"
+}
+```
 
-### Role-Based Access Control
+## Session Management
+
+### Check Authentication Status
+
+```python
+from components.auth import check_authentication
+
+if check_authentication():
+    # User is authenticated
+    render_main_app()
+else:
+    # Show login page
+    render_auth()
+```
+
+### Logout
+
+```python
+from components.auth import logout
+
+# Log out the current user
+logout()
+st.rerun()
+```
+
+## User Menu
+
+The app includes a sidebar user menu that shows:
+- User's name
+- User's email
+- Logout button
+
+```python
+from components.auth import render_user_menu
+
+# Render in sidebar
+render_user_menu()
+```
+
+## Role-Based Access Control
+
+While Google OAuth doesn't provide roles directly, you can implement role management:
+
+### Define Admin Emails
+
+```python
+ADMIN_EMAILS = [
+    "admin@yourcompany.com",
+    "owner@yourcompany.com"
+]
+
+def get_user_role(email):
+    if email in ADMIN_EMAILS:
+        return "admin"
+    return "user"
+```
+
+### Check Roles
 
 ```python
 from components.auth import require_role
 
 if require_role("admin"):
-    # Admin-only functionality
     render_admin_panel()
 else:
     st.warning("Admin access required")
 ```
 
-## Session Management
+## Configuration Reference
 
-### Session Configuration
+### Environment Variables
 
-```python
-from utils.session_manager import SessionManager
-from datetime import timedelta
+| Variable | Default | Description |
+|----------|---------|-------------|
+| AUTH_ENABLED | false | Enable/disable authentication |
 
-# Create session manager with custom timeout
-session_mgr = SessionManager(timeout=timedelta(hours=8))
-```
+### Streamlit Cloud Settings
 
-### Session Operations
+| Setting | Description |
+|---------|-------------|
+| Viewer authentication | Enable Google sign-in requirement |
+| Allowed users | Specific email addresses to allow |
+| Allowed domains | Email domains to allow (e.g., @company.com) |
 
-```python
-# Create session
-session_id = session_mgr.create_session(user_id, data)
+## Security Best Practices
 
-# Get session data
-data = session_mgr.get_session(session_id)
+### 1. Use HTTPS
 
-# Update session
-session_mgr.update_session(session_id, {"key": "value"})
+Streamlit Cloud automatically provides HTTPS. For self-hosted deployments, ensure you configure SSL/TLS.
 
-# Extend session
-session_mgr.extend_session(session_id)
+### 2. Restrict Access
 
-# Destroy session
-session_mgr.destroy_session(session_id)
-```
+Configure allowed users or domains in Streamlit Cloud settings rather than allowing all Google users.
 
-## Security Features
+### 3. Monitor Access
 
-### Brute Force Protection
+Check your Streamlit Cloud dashboard for:
+- Active sessions
+- Login attempts
+- User activity
 
-- Account lockout after 5 failed attempts
-- 5-minute lockout period
-- Automatic reset after successful login
+### 4. Keep Auth Enabled in Production
 
-### Password Requirements
-
-Recommended password policy:
-- Minimum 8 characters
-- Mix of uppercase/lowercase
-- At least one number
-- At least one special character
-
-Implement custom validation:
-```python
-def validate_password(password):
-    if len(password) < 8:
-        return False, "Password must be at least 8 characters"
-    if not re.search(r"[A-Z]", password):
-        return False, "Password must contain uppercase letter"
-    if not re.search(r"[0-9]", password):
-        return False, "Password must contain a number"
-    return True, "Password is valid"
-```
-
-## Database Backend
-
-### Default: Session State
-
-By default, users are stored in Streamlit session state (not persistent).
-
-### Production: Database
-
-For production, implement a database backend:
-
-```python
-import sqlite3
-
-class UserDatabase:
-    def __init__(self, db_path="users.db"):
-        self.conn = sqlite3.connect(db_path)
-        self._create_tables()
-
-    def _create_tables(self):
-        self.conn.execute("""
-            CREATE TABLE IF NOT EXISTS users (
-                username TEXT PRIMARY KEY,
-                password_hash TEXT,
-                name TEXT,
-                email TEXT,
-                role TEXT,
-                created_at TIMESTAMP
-            )
-        """)
-        self.conn.commit()
-
-    def add_user(self, username, password_hash, name, email, role):
-        self.conn.execute(
-            "INSERT INTO users VALUES (?, ?, ?, ?, ?, ?)",
-            (username, password_hash, name, email, role, datetime.now())
-        )
-        self.conn.commit()
-
-    def get_user(self, username):
-        cursor = self.conn.execute(
-            "SELECT * FROM users WHERE username = ?",
-            (username,)
-        )
-        return cursor.fetchone()
-```
-
-## OAuth Integration
-
-### Google OAuth (Example)
-
-```python
-from authlib.integrations.starlette_client import OAuth
-
-oauth = OAuth()
-oauth.register(
-    name='google',
-    client_id='your-client-id',
-    client_secret='your-client-secret',
-    authorize_url='https://accounts.google.com/o/oauth2/auth',
-    access_token_url='https://accounts.google.com/o/oauth2/token',
-    client_kwargs={'scope': 'openid email profile'},
-)
-```
-
-## Audit Logging
-
-Track authentication events:
-
-```python
-import logging
-
-auth_logger = logging.getLogger("auth")
-
-def log_auth_event(event_type, username, success, details=None):
-    auth_logger.info(f"{event_type} | user={username} | success={success} | {details}")
+```toml
+# Production .streamlit/secrets.toml
+AUTH_ENABLED = true
 ```
 
 ## Troubleshooting
 
-### "Session Expired"
-- Sessions timeout after 24 hours by default
-- User needs to log in again
-- Consider extending session timeout
+### "Authentication not working locally"
 
-### "Account Locked"
-- Wait 5 minutes
-- Or reset via admin panel
-- Check for brute force attacks
+Local development doesn't have access to Streamlit Cloud's OAuth. Options:
+- Set `AUTH_ENABLED=false` for local testing
+- Deploy to Streamlit Cloud for full OAuth testing
 
-### "Password Reset Not Working"
-- Implement email-based reset
-- Provide admin reset option
-- Log password reset attempts
+### "User not being recognized"
 
-## Best Practices
+Ensure your app checks `st.experimental_user`:
+```python
+if hasattr(st, 'experimental_user') and st.experimental_user.email:
+    # User is authenticated
+    pass
+```
 
-1. **Use HTTPS** in production
-2. **Implement password hashing** (bcrypt recommended)
-3. **Enable session timeouts**
-4. **Log all authentication events**
-5. **Implement account recovery**
-6. **Use secure session tokens**
-7. **Validate all user input**
+### "Can't access after login"
+
+Check that:
+1. Your email is in the allowed users list (if configured)
+2. Your domain is in the allowed domains (if configured)
+3. AUTH_ENABLED is set correctly
+
+### "Session keeps expiring"
+
+Streamlit Cloud sessions have a default timeout. Users need to:
+- Keep the app tab active
+- Re-authenticate after long periods of inactivity
+
+## Migration from Password Auth
+
+If you're migrating from the previous password-based authentication:
+
+1. **Remove old user database** - No longer needed
+2. **Update AUTH_ENABLED** - Set to `true`
+3. **Deploy to Streamlit Cloud** - Configure Google OAuth
+4. **Notify users** - They'll now sign in with Google
+
+The new system is simpler:
+- No passwords to manage
+- No user registration required
+- Automatic security updates from Google
+- Single sign-on if users are already logged into Google
+
+## Summary
+
+| Feature | Description |
+|---------|-------------|
+| Authentication | Google OAuth via Streamlit Cloud |
+| Configuration | Single `AUTH_ENABLED` setting |
+| User Info | Email and name from Google account |
+| Roles | Implement based on email addresses |
+| Sessions | Managed automatically by Streamlit |

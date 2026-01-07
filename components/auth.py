@@ -1,35 +1,13 @@
 """
 Authentication & User Management Component
-Provides user authentication, session management, and access control.
+Provides Google OAuth authentication using Streamlit's built-in OAuth support.
 """
 
 import streamlit as st
-import hashlib
-import hmac
-import os
 import logging
 from typing import Optional, Dict, Any
-from datetime import datetime, timedelta
-import json
 
 logger = logging.getLogger("rag_app.components.auth")
-
-
-# Default users for demo (in production, use a proper database)
-DEFAULT_USERS = {
-    "admin": {
-        "password_hash": hashlib.sha256("admin123".encode()).hexdigest(),
-        "name": "Administrator",
-        "role": "admin",
-        "email": "admin@example.com",
-    },
-    "user": {
-        "password_hash": hashlib.sha256("user123".encode()).hexdigest(),
-        "name": "Demo User",
-        "role": "user",
-        "email": "user@example.com",
-    },
-}
 
 
 def init_auth_state():
@@ -40,201 +18,112 @@ def init_auth_state():
         st.session_state.authenticated = False
     if 'current_user' not in st.session_state:
         st.session_state.current_user = None
-    if 'login_attempts' not in st.session_state:
-        st.session_state.login_attempts = 0
-    if 'lockout_until' not in st.session_state:
-        st.session_state.lockout_until = None
-    if 'users_db' not in st.session_state:
-        st.session_state.users_db = DEFAULT_USERS.copy()
-
-
-def hash_password(password: str) -> str:
-    """Hash a password using SHA-256."""
-    return hashlib.sha256(password.encode()).hexdigest()
-
-
-def verify_password(password: str, password_hash: str) -> bool:
-    """Verify a password against its hash."""
-    return hmac.compare_digest(hash_password(password), password_hash)
 
 
 def check_authentication() -> bool:
-    """Check if user is authenticated."""
+    """
+    Check if user is authenticated via Google OAuth.
+
+    Returns:
+        True if authenticated, False otherwise
+    """
     init_auth_state()
+
+    # If auth is not enabled, always return True
+    if not st.session_state.get('auth_enabled', False):
+        return True
+
+    # Check if user is logged in via Streamlit's experimental_user
+    if hasattr(st, 'experimental_user') and st.experimental_user.email:
+        st.session_state.authenticated = True
+        st.session_state.current_user = {
+            "email": st.experimental_user.email,
+            "name": getattr(st.experimental_user, 'name', st.experimental_user.email.split('@')[0]),
+            "role": "user",
+        }
+        logger.info(f"User authenticated via Google OAuth: {st.experimental_user.email}")
+        return True
+
+    # Fallback: check session state
     return st.session_state.get('authenticated', False)
 
 
 def get_current_user() -> Optional[Dict[str, Any]]:
     """Get the current authenticated user."""
     init_auth_state()
+
+    # Try to get user from Streamlit's experimental_user first
+    if hasattr(st, 'experimental_user') and st.experimental_user.email:
+        return {
+            "email": st.experimental_user.email,
+            "name": getattr(st.experimental_user, 'name', st.experimental_user.email.split('@')[0]),
+            "role": "user",
+        }
+
     return st.session_state.get('current_user')
-
-
-def login(username: str, password: str) -> bool:
-    """
-    Attempt to log in a user.
-
-    Args:
-        username: Username to authenticate
-        password: Password to verify
-
-    Returns:
-        True if login successful, False otherwise
-    """
-    init_auth_state()
-
-    # Check lockout
-    if st.session_state.lockout_until:
-        if datetime.now() < st.session_state.lockout_until:
-            remaining = (st.session_state.lockout_until - datetime.now()).seconds
-            logger.warning(f"Login attempt during lockout: {username}")
-            st.error(f"Account locked. Try again in {remaining} seconds.")
-            return False
-        else:
-            st.session_state.lockout_until = None
-            st.session_state.login_attempts = 0
-
-    users = st.session_state.users_db
-    if username in users:
-        user = users[username]
-        if verify_password(password, user['password_hash']):
-            st.session_state.authenticated = True
-            st.session_state.current_user = {
-                "username": username,
-                "name": user['name'],
-                "role": user['role'],
-                "email": user['email'],
-                "login_time": datetime.now().isoformat(),
-            }
-            st.session_state.login_attempts = 0
-            logger.info(f"User logged in: {username}")
-            return True
-
-    # Failed login
-    st.session_state.login_attempts += 1
-    logger.warning(f"Failed login attempt for: {username} (attempt {st.session_state.login_attempts})")
-
-    # Lockout after 5 failed attempts
-    if st.session_state.login_attempts >= 5:
-        st.session_state.lockout_until = datetime.now() + timedelta(minutes=5)
-        st.error("Too many failed attempts. Account locked for 5 minutes.")
-    else:
-        st.error("Invalid username or password.")
-
-    return False
 
 
 def logout():
     """Log out the current user."""
     init_auth_state()
-    username = st.session_state.current_user.get('username') if st.session_state.current_user else 'unknown'
+    user = st.session_state.current_user
+    username = user.get('email') if user else 'unknown'
     st.session_state.authenticated = False
     st.session_state.current_user = None
     logger.info(f"User logged out: {username}")
 
 
-def register_user(username: str, password: str, name: str, email: str, role: str = "user") -> bool:
-    """
-    Register a new user.
-
-    Args:
-        username: Unique username
-        password: Password (will be hashed)
-        name: Display name
-        email: Email address
-        role: User role (default: user)
-
-    Returns:
-        True if registration successful, False otherwise
-    """
-    init_auth_state()
-
-    if username in st.session_state.users_db:
-        return False
-
-    st.session_state.users_db[username] = {
-        "password_hash": hash_password(password),
-        "name": name,
-        "role": role,
-        "email": email,
-        "created_at": datetime.now().isoformat(),
-    }
-
-    logger.info(f"New user registered: {username}")
-    return True
-
-
 def render_auth():
-    """Render the authentication UI."""
+    """Render the authentication UI for Google OAuth."""
     init_auth_state()
 
-    st.title("🔐 Authentication Required")
-    st.markdown("Please log in to access the RAG Starter Kit Pro.")
+    st.title("Welcome to RAG Starter Kit Pro")
 
-    tab1, tab2 = st.tabs(["Login", "Register"])
+    st.markdown("""
+    ### Sign in to continue
 
-    with tab1:
-        render_login_form()
+    This application requires authentication. Please sign in with your Google account to access all features.
+    """)
 
-    with tab2:
-        render_register_form()
-
-
-def render_login_form():
-    """Render the login form."""
-    with st.form("login_form"):
-        st.subheader("Login")
-        username = st.text_input("Username")
-        password = st.text_input("Password", type="password")
-        submitted = st.form_submit_button("Login", use_container_width=True)
-
-        if submitted:
-            if username and password:
-                if login(username, password):
-                    st.success("Login successful!")
-                    st.rerun()
-            else:
-                st.warning("Please enter both username and password.")
-
+    # Show login button that redirects to Google OAuth
     st.markdown("---")
-    st.markdown("**Demo Credentials:**")
-    st.code("Username: admin | Password: admin123\nUsername: user | Password: user123")
 
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        st.markdown("""
+        <div style="text-align: center; padding: 20px;">
+            <p style="color: #666; margin-bottom: 20px;">
+                Click the button below to sign in with Google
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
 
-def render_register_form():
-    """Render the registration form."""
-    with st.form("register_form"):
-        st.subheader("Create Account")
-        username = st.text_input("Username")
-        email = st.text_input("Email")
-        name = st.text_input("Full Name")
-        password = st.text_input("Password", type="password")
-        confirm_password = st.text_input("Confirm Password", type="password")
-        submitted = st.form_submit_button("Register", use_container_width=True)
+        # Streamlit Cloud automatically handles OAuth - show instructions
+        st.info("""
+        **To enable Google OAuth:**
 
-        if submitted:
-            if not all([username, email, name, password, confirm_password]):
-                st.warning("Please fill in all fields.")
-            elif password != confirm_password:
-                st.error("Passwords do not match.")
-            elif len(password) < 6:
-                st.error("Password must be at least 6 characters.")
-            else:
-                if register_user(username, password, name, email):
-                    st.success("Registration successful! Please log in.")
-                else:
-                    st.error("Username already exists.")
+        1. Deploy this app to Streamlit Cloud
+        2. Go to your app settings
+        3. Enable "Viewer authentication"
+        4. Select "Google" as the identity provider
+        5. Configure allowed email domains (optional)
+
+        The login will appear automatically when configured.
+        """)
+
+        st.markdown("---")
+        st.caption("For local development, set `AUTH_ENABLED=false` in your environment.")
 
 
 def render_user_menu():
     """Render user menu in sidebar."""
     init_auth_state()
 
-    if st.session_state.authenticated and st.session_state.current_user:
-        user = st.session_state.current_user
+    user = get_current_user()
+    if user:
         st.sidebar.markdown("---")
-        st.sidebar.markdown(f"**👤 {user['name']}**")
-        st.sidebar.caption(f"Role: {user['role']}")
+        st.sidebar.markdown(f"**{user.get('name', 'User')}**")
+        st.sidebar.caption(f"{user.get('email', '')}")
 
         if st.sidebar.button("Logout", use_container_width=True):
             logout()
@@ -261,10 +150,10 @@ def require_role(required_role: str) -> bool:
         return False
 
     # Admin has all permissions
-    if user['role'] == 'admin':
+    if user.get('role') == 'admin':
         return True
 
-    return user['role'] == required_role
+    return user.get('role') == required_role
 
 
 def get_user_settings() -> Dict[str, Any]:
@@ -276,7 +165,8 @@ def get_user_settings() -> Dict[str, Any]:
         return {}
 
     # Load user settings from session or default
-    settings_key = f"user_settings_{user['username']}"
+    email = user.get('email', 'default')
+    settings_key = f"user_settings_{email}"
     if settings_key not in st.session_state:
         st.session_state[settings_key] = {
             "theme": "light",
@@ -294,6 +184,7 @@ def save_user_settings(settings: Dict[str, Any]):
     user = st.session_state.current_user
 
     if user:
-        settings_key = f"user_settings_{user['username']}"
+        email = user.get('email', 'default')
+        settings_key = f"user_settings_{email}"
         st.session_state[settings_key] = settings
-        logger.info(f"Settings saved for user: {user['username']}")
+        logger.info(f"Settings saved for user: {email}")

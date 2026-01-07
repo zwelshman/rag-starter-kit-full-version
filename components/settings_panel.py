@@ -29,6 +29,19 @@ PROVIDERS = {
         "models": ["command-r-plus", "command-r", "command"],
         "default_model": "command-r-plus",
     },
+    "Hugging Face": {
+        "key_name": "HF_API_KEY",
+        "models": [
+            "meta-llama/Meta-Llama-3.1-8B-Instruct",
+            "meta-llama/Meta-Llama-3-8B-Instruct",
+            "mistralai/Mistral-7B-Instruct-v0.3",
+            "mistralai/Mixtral-8x7B-Instruct-v0.1",
+            "microsoft/Phi-3-mini-4k-instruct",
+            "google/gemma-2-9b-it",
+            "Qwen/Qwen2.5-7B-Instruct",
+        ],
+        "default_model": "meta-llama/Meta-Llama-3.1-8B-Instruct",
+    },
     "Ollama (Local)": {
         "key_name": None,
         "models": ["llama3.2", "llama3.1", "mistral", "mixtral", "codellama"],
@@ -72,7 +85,9 @@ def render_sidebar() -> Tuple[float, int]:
         )
 
         # Store provider and model in session state for tracking
-        st.session_state.llm_provider = provider.lower().replace(" (local)", "")
+        # Normalize provider name for backend (e.g., "Hugging Face" -> "huggingface")
+        provider_key = provider.lower().replace(" (local)", "").replace(" ", "")
+        st.session_state.llm_provider = provider_key
         st.session_state.llm_model = model
 
         # Get API key from secrets or environment
