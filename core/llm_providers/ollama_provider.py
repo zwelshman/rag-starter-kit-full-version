@@ -13,6 +13,40 @@ from .base import BaseLLMClient
 logger = logging.getLogger("rag_app.llm.ollama")
 
 
+class OllamaConnectionError(Exception):
+    """
+    Raised when unable to connect to the Ollama server.
+    Provides user-friendly error messages with troubleshooting steps.
+    """
+
+    def __init__(self, host: str, original_error: Optional[Exception] = None):
+        self.host = host
+        self.original_error = original_error
+
+        message = self._build_error_message()
+        super().__init__(message)
+
+    def _build_error_message(self) -> str:
+        """Build a helpful error message with troubleshooting steps."""
+        return (
+            f"\n{'='*60}\n"
+            f"OLLAMA CONNECTION ERROR\n"
+            f"{'='*60}\n"
+            f"Cannot connect to Ollama server at: {self.host}\n\n"
+            f"This usually means Ollama is not running. Please try:\n\n"
+            f"1. Start Ollama:\n"
+            f"   - On Windows/macOS: Open the Ollama application\n"
+            f"   - On Linux: Run 'ollama serve' in a terminal\n\n"
+            f"2. Verify Ollama is running:\n"
+            f"   curl {self.host}/api/tags\n\n"
+            f"3. If Ollama is on a different host/port, set OLLAMA_HOST:\n"
+            f"   export OLLAMA_HOST=http://your-host:port\n\n"
+            f"4. Make sure you have a model pulled:\n"
+            f"   ollama pull llama3.2\n"
+            f"{'='*60}"
+        )
+
+
 class OllamaClient(BaseLLMClient):
     """
     Ollama LLM client implementation.
@@ -55,6 +89,32 @@ class OllamaClient(BaseLLMClient):
             return response.status_code == 200
         except requests.exceptions.RequestException:
             return False
+
+    def _is_connection_error(self, error: requests.exceptions.RequestException) -> bool:
+        """Check if the error is a connection-related error."""
+        # Check for connection refused, connection reset, or timeout errors
+        error_str = str(error).lower()
+        connection_indicators = [
+            "connection refused",
+            "newconnectionerror",
+            "connectionerror",
+            "max retries exceeded",
+            "failed to establish",
+            "no connection could be made",
+            "actively refused",
+            "connection reset",
+            "name or service not known",
+            "nodename nor servname provided",
+            "errno 111",  # Linux connection refused
+            "errno 10061",  # Windows connection refused
+            "winerror 10061",  # Windows connection refused
+        ]
+        return any(indicator in error_str for indicator in connection_indicators)
+
+    def _ensure_connection(self) -> None:
+        """Ensure Ollama server is reachable, raise helpful error if not."""
+        if not self._check_connection():
+            raise OllamaConnectionError(self.host)
 
     def get_available_models(self) -> List[str]:
         """Get list of models available on the Ollama server."""
@@ -115,6 +175,8 @@ class OllamaClient(BaseLLMClient):
 
         except requests.exceptions.RequestException as e:
             logger.error(f"Ollama request failed: {e}")
+            if self._is_connection_error(e):
+                raise OllamaConnectionError(self.host, e)
             raise RuntimeError(f"Ollama request failed: {e}")
 
     def generate_stream(
@@ -173,6 +235,8 @@ class OllamaClient(BaseLLMClient):
 
         except requests.exceptions.RequestException as e:
             logger.error(f"Ollama streaming request failed: {e}")
+            if self._is_connection_error(e):
+                raise OllamaConnectionError(self.host, e)
             raise RuntimeError(f"Ollama streaming request failed: {e}")
 
     def get_model_info(self) -> dict:
